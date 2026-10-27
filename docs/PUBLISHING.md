@@ -1,232 +1,112 @@
-# 发布与维护指南
+# 发布与仓库维护指南
 
-这份文件只给仓库维护者看：怎么把这个文件夹推上 GitHub、怎么发版、以后更新版本要做什么。
-玩家只需要看 [README.md](../README.md)。
+面向仓库维护者。**这款游戏目前只有 Windows 版本的试玩 demo，源码尚未公开**，仓库里放的是“分片形式的可执行文件 + 文档”。
 
----
+## 当前仓库状态
 
-## 1. 这个文件夹做了什么改动
-
-原来的结构：
-
-```
-GalaxyCastle_Demo_v0.1/
-├── GalaxyCastle.exe            110 MB
-├── Play Galaxy Castle.bat
-├── README.txt
-└── data/  (4 个分片)
-```
-
-现在的结构：
-
-```
-GalaxyCastle_Demo_v0.1/        ← 就是仓库根目录
-├── .gitattributes             统一换行符、标记二进制文件
-├── .gitignore                 忽略生成物和系统垃圾文件
-├── README.md                  英文主说明（GitHub 首页会显示它）
-├── README.zh-CN.md            中文说明
-├── CHANGELOG.md               版本记录
-├── play.bat                   启动器（原来的 "Play Galaxy Castle.bat"）
-├── GalaxyCastle.exe           首次运行自动生成，不提交
-├── data/                      4 个分片，提交
-├── docs/
-│   ├── banner.png             README 顶部横幅
-│   ├── social-preview.png     仓库分享卡片（1280×640）
-│   ├── PUBLISHING.md          本文件
-│   └── screenshots/           截图放这里
-└── tools/
-    ├── gen-banner.ps1         重新生成横幅
-    ├── split-build.ps1        把新导出的 exe 切成 4 份
-    └── package-release.ps1    打 Release 用的 zip
-```
-
-三个关键决定：
-
-1. **exe 拆成 4 份放在 `data/`**。GitHub 拒绝大于 100 MB 的单个文件，而这个 Godot 导出是 105 MB。
-   每份约 27 MB，`play.bat` 在首次启动时把它拼回去。
-2. **拼好的 `GalaxyCastle.exe` 不提交**。它和四个分片内容完全一样，提交只会让仓库体积翻倍，
-   所以写进了 `.gitignore`。
-3. **文件名去掉空格**（`Play Galaxy Castle.bat` → `play.bat`）。带空格的路径在命令行、
-   URL 和别人的脚本里都要额外转义，GitHub 上容易出问题。
-
----
-
-## 2. 在 GitHub 上新建仓库
-
-打开 <https://github.com/new>，也就是你截图里的那一页，然后照这样填：
-
-| 字段 | 填什么 |
+| 项目 | 内容 |
 | --- | --- |
-| **Owner** | `hanghangworker-ui` |
-| **Repository name** | `Galaxy Castle` → 实际会创建成 `Galaxy-Castle` |
-| **Description** | 粘贴下面 3.1 里的文字 |
-| **Visibility** | `Public` |
-| **Add README** | **关闭**（本地已有 README.md） |
-| **Add .gitignore** | **No .gitignore**（本地已有） |
-| **Choose a license** | **不选**（见第 6 节） |
+| 仓库 | `https://github.com/hanghangworker-ui/Galaxy-Castle` |
+| 默认分支 | `main` |
+| 标签 | `v0.1.0`（首个公开版本）、`v0.4.0`（第二个公开版本） |
+| 仓库体积 | 约 110 MB（4 个分片 + 文档），未启用 LFS |
 
-> 三个初始化选项一定要关掉。如果让 GitHub 先生成 README 或 .gitignore，
-> 第一次 `git push` 会因为历史不同而被拒绝，还得手动 merge。
+## 一、仓库描述（About 那一栏）
 
-### 2.1 仓库描述（Description，上限 350 字符）
+打开仓库首页 → 右侧 **About** → 点齿轮 **Edit** → 把文案粘进 **Description**（上限 350 字符）→ 顺便填 **Website** 和 **Topics** → *Save changes*。
 
-英文版（204 字符，推荐，和仓库内容语言一致）：
+**英文（230 字符）：**
 
 ```
-Galaxy Castle — a 10–15 minute 2D action-platformer demo: dash, parry, and flip gravity to fight on the ceiling, then face the Gatewarden boss. Made with Godot 4.7 for Windows x64. v0.1 "The Fallen Gate".
+Galaxy Castle — a 10–15 minute 2D action-platformer demo. Dash, parry and flip gravity to fight on the ceiling. v0.4 adds three save slots, settings with key rebinding and Hollow Knight-style camera zones. Godot 4.7 · Windows x64.
 ```
 
-中文版（103 字符，想面向中文玩家就用这段）：
+**中文（110 字符，想换成中文就整段替换）：**
 
 ```
-《银河城堡》——约 10–15 分钟的 2D 动作平台游戏试玩版：冲刺、弹反、翻转重力在天花板战斗，最终挑战守门人 Boss。使用 Godot 4.7 制作，Windows 64 位。v0.1「堕落之门」。
+《银河城堡》试玩版 v0.4 —— 约 10–15 分钟的 2D 动作平台游戏：冲刺、弹反、翻转重力在天花板战斗。新增 3 个存档位、可改键的设置界面与类空洞骑士的镜头分区。Godot 4.7，Windows 64 位。
 ```
 
-### 2.2 Topics（仓库标签）
-
-在仓库首页右侧 **About** 的齿轮里，把这些标签加进去：
+**Topics（逐个输入后回车）：**
 
 ```
-godot  godot-engine  2d-platformer  action-platformer  indie-game  game-demo  windows  singleplayer  boss-fight
+godot  godot4  gamedev  platformer  2d-game  action-platformer  indie-game  demo  windows  pixel-art
 ```
 
----
+> 描述只在 350 字符以内才有意义，首屏大约只显示前 100–160 字符（手机更少），所以第一句必须说清楚“这是什么、多长、什么平台”。
 
-## 3. 推送本地仓库
+## 二、发一个新版本（v0.5 及以后）
 
-本地已经执行过 `git init` 并做好了第一个提交（提交信息：
-`Galaxy Castle — first playable demo v0.1 (The Fallen Gate)`）。所以现在只需要：
+假设你已经从 Godot 重新导出了 `GalaxyCastle.exe`：
 
-```bash
-cd "D:\银河城堡游戏\GalaxyCastle_Demo_v0.1"
-git remote add origin https://github.com/hanghangworker-ui/Galaxy-Castle.git
-git branch -M main
-git push -u origin main
-```
-
-首次推送约 105 MB（4 个分片），根据网速可能要几分钟。
-
-**认证方式**（选一个）：
-
-- **GitHub Desktop**：最省事，登录后 `Add local repository` 选这个文件夹，再 `Publish`。
-- **命令行 + Personal Access Token**：GitHub → Settings → Developer settings →
-  Personal access tokens，勾 `repo` 权限，推送时把 token 当密码填。
-- Windows 一般会弹出 Git Credential Manager 的浏览器登录窗口，直接登录即可。
-
-如果本地还没初始化（比如你换了台电脑），执行：
-
-```bash
-git init -b main
-git add .
-git commit -m "Galaxy Castle — first playable demo v0.1 (The Fallen Gate)"
-```
-
-推送前可以用 `git status` 确认 **没有** `GalaxyCastle.exe`、`dist/`、`*.zip` 出现在待提交列表里。
-
----
-
-## 4. 发布一个 Release（给玩家的下载入口）
-
-玩家不用装 git 也能玩：
-
-```powershell
-pwsh -File tools/package-release.ps1
-```
-
-会生成 `dist/GalaxyCastle_Demo_v0.1_Windows.zip`（约 105 MB，里面已经拼好了 exe）。
-
-然后：
-
-1. 仓库页 → **Releases** → **Draft a new release**
-2. **Choose a tag** 输入 `v0.1.0` → *Create new tag on publish*
-3. **Release title**：`Galaxy Castle — Demo v0.1 "The Fallen Gate"`
-4. 描述直接贴 README 里 *What's in the demo* 的那几条
-5. 把 zip 拖到附件区
-6. **Publish release**
-
-> `dist/` 和 `*.zip` 已经在 `.gitignore` 里，别把压缩包提交进仓库。
-
-> 顺序很重要：**先推代码，再发 Release**。在第一个 Release 发布之前，README 里的 Releases 链接还没有东西可下载；等 Release 发好之后，再把仓库地址发给别人。
-
----
-
-## 5. 以后更新版本
-
-1. 在 Godot 里重新导出 Windows 版 `GalaxyCastle.exe`
-2. 重新切分：
+1. **切分新的 exe**（替换仓库里的 4 个分片）：
 
    ```powershell
-   pwsh -File tools/split-build.ps1 -Exe "C:\路径\GalaxyCastle.exe"
+   .\tools\split-build.ps1 -Exe 'D:\导出\GalaxyCastle.exe' -PartSizeMB 27
    ```
 
-   脚本会清掉旧的 `data/GalaxyCastle.exe.00*` 再写入新的分片。
-3. 更新 `CHANGELOG.md`，以及 README 里出现的版本号
-4. 提交并打标签：
+   脚本会把 exe 切成 `data/GalaxyCastle.exe.001-00N` 并核对总字节数。
 
-   ```bash
+2. **把 exe 本身放到仓库根目录**（`play.bat` 需要它；它已在 `.gitignore` 里，不会被提交）。
+
+3. **改版本号**：`README.md` / `README.zh-CN.md` 的标题与 v0.4 段落、`CHANGELOG.md` 顶部新增一节。
+
+4. **提交并打标签**：
+
+   ```powershell
    git add -A
-   git commit -m "Demo v0.2"
-   git tag -a v0.2.0 -m "Demo v0.2"
+   git commit -m "Galaxy Castle - playable demo v0.5"
+   git tag -a v0.5.0 -m "Galaxy Castle v0.5.0"
    git push origin main --tags
    ```
 
-5. 重复第 4 节，发布新的 Release
+5. **发 Release**：GitHub → Releases → *Draft a new release* → 选择刚推上去的标签 → 用 `.\tools\package-release.ps1 -Version 0.5` 生成的 `dist/GalaxyCastle_Demo_v0.5_Windows.zip` 作为附件。
 
----
+   > 分片形式的仓库克隆下来也能直接玩（`play.bat` 会拼），Release 的 zip 只是给不想用 git 的人准备的单文件下载。
 
-## 6. 许可证
+6. **改 About 里的描述**：把 `v0.4` 换成新版本号，重新数一遍字符（PowerShell：`'文案'.Length`）。
 
-仓库目前**没有** `LICENSE` 文件，也就是默认保留所有权利，别人不能合法地复用代码或素材。
-如果要开源，在 GitHub 创建仓库时选一个，或本地加 `LICENSE` 文件，常见组合：
+## 三、大文件：GitHub 的限制
 
-- 代码：MIT / Apache-2.0
-- 美术、音乐、音效：CC BY-NC 4.0（允许转载、禁止商用）或 CC BY 4.0
+| 限制 | 数值 | 本仓库怎么处理 |
+| --- | --- | --- |
+| 单文件硬上限 | **100 MiB** | exe 110 MB → 切成 4 个 ≈27 MB 的分片 |
+| 单文件推荐上限 | **50 MiB** | 分片与截图都在范围内 |
+| 单次 push 上限 | **2 GiB** | 一次提交约 110 MB |
+| 仓库建议上限 | **1 GiB** | 目前约 110 MB |
 
-加完之后记得更新 README 底部的 *License* 一节。
-
----
-
-## Working with large binaries
-
-这是中文读者最常踩的坑，英文标题方便检索。
-
-| GitHub 限制 | 数值 |
-| --- | --- |
-| 单个文件警告 | 50 MB |
-| 单个文件硬上限（拒绝推送） | 100 MB |
-| 仓库建议上限 | 1 GB |
-
-当前仓库：4 × 26.7 MB ≈ 107 MB，刚超过"建议"线但完全可用。
-
-每发一个新版本，Git 历史里会再增加约 107 MB——几个版本之后仓库会明显变重。
-三种处理方式：
-
-**A. 保持现状（简单）**
-适合试玩版阶段，玩家 `git clone` 一次 100 多 MB 也能接受。
-
-**B. 改用 Git LFS（大文件不进普通历史）**
+**替代方案：Git LFS**（想保留单个 110 MB 的 exe 时用）
 
 ```bash
 git lfs install
-git lfs track "data/*"
+git lfs track "*.exe"
 git add .gitattributes
-git add data
-git commit -m "Track demo build with Git LFS"
 ```
 
-注意：Git LFS 免费额度是 1 GB 存储 + 每月 1 GB 流量，超了要付费；
-而且克隆的人必须先装 `git-lfs`，否则只会拿到指针文件。**在已经提交过大文件之后再改 LFS 需要重写历史**，
-所以最好一开始就决定。
+代价：每个克隆的人都要装 Git LFS，且免费额度只有 1 GiB 存储 / 1 GiB 月流量。对这个项目来说，分片方案更省事。
 
-**C. 构建物只放 Release（最干净）**
-仓库只留 README、文档和以后公开的源码，玩家从 Releases 下载 zip。
-缺点是 `git clone` 之后不能直接玩。
+## 四、其他设置
 
----
+- **社交预览图**：仓库 → Settings → General → *Social preview* → 上传 `docs/social-preview.png`（1280×640）。分享链接时显示的就是它。
+- **主题**：Settings → General → *Default branch* 保持 `main`；仓库根目录别放 `README.txt` 之流，`README.md` 会自动成为首页。
+- **话题/许可证**：许可证要等决定开源方式再加 `LICENSE` 文件；在那之前 README 已写明“保留所有权利”。
+- **提交信息**：这个仓库保持 `Galaxy Castle - <一句话>` 的格式，版本号记在标签和 CHANGELOG 里。
 
-## 7. 仓库设置建议
+## 五、需要一个“还原点”时
 
-- **About**：填描述 + topics，有官网/Steam 页就填 Website
-- **Settings → Social preview**：上传 `docs/social-preview.png`（1280×640）
-- **Settings → Features**：Issues 打开（收集反馈），Wiki、Projects 关掉
-- **Settings → General → Danger Zone**：不要手滑删库 :)
+标签就是还原点：
+
+```powershell
+git fetch --tags                 # 拉取标签
+git tag                          # 列出所有标签
+git show v0.1.0 --stat           # 看某一版改了哪些文件
+git checkout v0.1.0              # 临时回到 v0.1（只读，别在这上面提交）
+git switch main                  # 回来
+```
+
+彻底回退到 v0.1（历史保留）：
+
+```powershell
+git revert --no-commit v0.1.0..HEAD
+git commit -m "Galaxy Castle - roll back to demo v0.1"
+```

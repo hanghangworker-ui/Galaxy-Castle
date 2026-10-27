@@ -6,7 +6,7 @@
 #
 # Output: dist/GalaxyCastle_Demo_v<version>_Windows.zip
 param(
-  [string]$Version = '0.1'
+  [string]$Version = '0.4'
 )
 
 $ErrorActionPreference = 'Stop'

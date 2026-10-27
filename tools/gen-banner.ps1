@@ -1,7 +1,8 @@
 # Generates the README banner + GitHub social preview for Galaxy Castle.
 # Usage: pwsh -File tools/gen-banner.ps1 -OutDir <path>
 param(
-  [string]$OutDir = (Join-Path $PSScriptRoot '..\docs')
+  [string]$OutDir = (Join-Path $PSScriptRoot '..\docs'),
+  [string]$DemoLabel = 'playable demo v0.4'
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -140,7 +141,7 @@ function New-GalaxyCastleImage {
 
   $subFont = New-Object System.Drawing.Font('Segoe UI', 19, [System.Drawing.FontStyle]::Regular, [System.Drawing.GraphicsUnit]::Pixel)
   $subBrush = New-Object System.Drawing.SolidBrush((New-Color 255 214 209 238))
-  $g.DrawString('2D action-platformer  ·  first playable demo v0.1', $subFont, $subBrush, $left, [float]($top + 320), $flat)
+  $g.DrawString("2D action-platformer  ·  $DemoLabel", $subFont, $subBrush, $left, [float]($top + 320), $flat)
   $subBrush.Dispose(); $subFont.Dispose()
 
   $footFont = New-Object System.Drawing.Font('Segoe UI Semibold', 12, [System.Drawing.FontStyle]::Regular, [System.Drawing.GraphicsUnit]::Pixel)
