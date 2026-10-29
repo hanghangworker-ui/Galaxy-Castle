@@ -25,7 +25,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string]$Version = '0.4',
+    [string]$Version = '0.10',
     [string]$Tag = '',
     [string]$Repo = 'hanghangworker-ui/Galaxy-Castle',
     [string]$Token = $env:GITHUB_TOKEN,

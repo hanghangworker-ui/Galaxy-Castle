@@ -6,7 +6,7 @@
 #
 # Output: dist/GalaxyCastle_Demo_v<version>_Windows.zip
 param(
-  [string]$Version = '0.4'
+  [string]$Version = '0.10'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -39,7 +39,7 @@ try {
     $buffer = Join-Path $stage 'GalaxyCastle.exe'
     $out = [System.IO.File]::Create($buffer)
     try {
-      foreach ($i in 1..4) {
+      foreach ($i in 1..11) {
         $part = Join-Path $root ('data\GalaxyCastle.exe.{0:D3}' -f $i)
         $in = [System.IO.File]::OpenRead($part)
         try { $in.CopyTo($out) } finally { $in.Dispose() }

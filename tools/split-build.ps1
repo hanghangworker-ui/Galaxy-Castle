@@ -10,7 +10,7 @@ param(
 
   [string]$OutDir = (Join-Path (Split-Path -Parent $PSScriptRoot) 'data'),
 
-  [int]$PartSizeMB = 27
+  [int]$PartSizeMB = 10
 )
 
 $ErrorActionPreference = 'Stop'

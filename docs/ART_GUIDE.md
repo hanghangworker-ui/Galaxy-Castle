@@ -35,6 +35,20 @@ tracing templates.
 | `fx/slash` | 80 × 80 | 50% , 50% | 640 × 640 px |
 | `fx/spark` | 16 × 16 | 50% , 50% | 128 × 128 px |
 
+## garden
+
+Skeleton: Spore Bloom: stem (base on the surface) → bulb (15 above base) → 4 petals; Vine Crawler: 3 segments + head + 4 leaf legs along its body; spore projectile. Drawn upright; the game rotates them onto walls and ceilings.
+
+| Part | Box (units, w × h) | Pivot inside the box (from left, from top) | Suggested PNG |
+| --- | --- | --- | --- |
+| `garden/bloom_bulb` | 22 × 20 | 50% , 95% | 176 × 160 px |
+| `garden/bloom_petal` | 8 × 16 | 50% , 94% | 64 × 128 px |
+| `garden/bloom_stem` | 12 × 19 | 50% , 95% | 96 × 152 px |
+| `garden/crawler_head` | 19 × 16 | 47% , 69% | 152 × 128 px |
+| `garden/crawler_leg` | 4 × 9 | 50% , -0% | 32 × 72 px |
+| `garden/crawler_seg` | 16 × 14 | 50% , 57% | 128 × 112 px |
+| `garden/spore` | 14 × 14 | 50% , 50% | 112 × 112 px |
+
 ## gatewarden
 
 Skeleton: hips (52 above feet) → torso → helm (+visor), cape, pauldrons, arms (upper → fore → halberd); hips → thighs → shins.
@@ -79,6 +93,16 @@ Skeleton: hips (25 above feet) → torso → head (+hair), cape, arms (upper →
 | `lune/thigh` | 8 × 15 | 50% , 10% | 64 × 120 px |
 | `lune/torso` | 18 × 25 | 50% , 72% | 144 × 200 px |
 
+## npc
+
+Skeleton: Orrin: body (pivot at his feet) → head (neck, 32 above feet), arm with quill (shoulder, 28 above feet).
+
+| Part | Box (units, w × h) | Pivot inside the box (from left, from top) | Suggested PNG |
+| --- | --- | --- | --- |
+| `npc/orrin_arm` | 17 × 18 | 24% , 11% | 136 × 144 px |
+| `npc/orrin_body` | 32 × 37 | 50% , 97% | 256 × 296 px |
+| `npc/orrin_head` | 25 × 32 | 48% , 72% | 200 × 256 px |
+
 ## wisp
 
 | Part | Box (units, w × h) | Pivot inside the box (from left, from top) | Suggested PNG |
@@ -90,3 +114,13 @@ Skeleton: hips (25 above feet) → torso → head (+hair), cape, arms (upper →
 
 Tiles (`art/tiles/*.png`) and backgrounds (`art/bg/*.png`) are already PNGs: overwrite them directly,
 keeping the same size (tiles are 64 × 64 seamless, backgrounds tile horizontally).
+
+**Cracked walls** (secret walls the glaive breaks) are drawn from the room's own stone face tile
+(`art/tiles/<gate|plateau|hall>_face.png`) exactly like the stone around them; the game adds hairline cracks
+only after the glaive strikes them.
+
+**Drawn in code for now** (tell me if you want them as replaceable parts): chains above hanging platforms and
+brackets under wall ledges (`world/level.gd`), the lever and the stone tablet (`world/props/lever.gd`,
+`tablet.gd`), and the Star Relic, Comet Ore and Stardust hoard pickups (`world/props/pickup.gd`). The Husk
+Brute and Ember Wisp reuse the Husk and Wisp parts, scaled and tinted by their data files
+(`art_scale`, `tint` in `data/enemies/husk_brute.json`, `ember_wisp.json`).

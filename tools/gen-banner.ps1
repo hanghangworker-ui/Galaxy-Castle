@@ -2,7 +2,7 @@
 # Usage: pwsh -File tools/gen-banner.ps1 -OutDir <path>
 param(
   [string]$OutDir = (Join-Path $PSScriptRoot '..\docs'),
-  [string]$DemoLabel = 'playable demo v0.4'
+  [string]$DemoLabel = 'playable demo v0.10'
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -52,7 +52,7 @@ function New-GalaxyCastleImage {
   $g.FillRectangle($bg, $rect)
 
   # --- stars ------------------------------------------------------------
-  $rand = New-Object System.Random(20261026)
+  $rand = New-Object System.Random(20261029)
   for ($i = 0; $i -lt 190; $i++) {
     $x = $rand.Next(0, $W)
     $y = $rand.Next(0, $H)
